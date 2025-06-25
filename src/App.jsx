@@ -1,34 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CardList from "./components/CardList";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import { useMoviesStore } from "./store/movies.store";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const movies = useMoviesStore((state) => state.movies);
+  const getMovies = useMoviesStore((state) => state.getMovies);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/popular',
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_API_TOKEN}`
-            }
-          }
-        );
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setMovies(data.results);
-      } catch (error) {
-        console.error('There has been a problem with your fetch operation:', error);
-      }
-    }
-    fetchData();
-  }, []);
+    getMovies();
+  }, [getMovies]);
 
   return (
     <>
